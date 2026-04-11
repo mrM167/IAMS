@@ -1,0 +1,43 @@
+# IAMS - .htaccess Security & Configuration
+
+# ---- Prevent directory browsing ----
+Options -Indexes
+
+# ---- Protect config directory ----
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Block direct access to config folder
+    RewriteRule ^config/ - [F,L]
+
+    # Force HTTPS (uncomment when SSL is enabled on your host)
+    # RewriteCond %{HTTPS} off
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# ---- Protect config files directly ----
+<FilesMatch "^(database|session)\.php$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# ---- Security headers ----
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# ---- PHP settings (if host allows) ----
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_value upload_max_filesize 10M
+    php_value post_max_size 11M
+    php_value max_execution_time 60
+    php_value session.cookie_httponly 1
+    php_value session.use_strict_mode 1
+</IfModule>
+
+# ---- Default document ----
+DirectoryIndex index.php index.html

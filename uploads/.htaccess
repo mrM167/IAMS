@@ -1,0 +1,10 @@
+# Prevent execution of uploaded files - security critical!
+# Users can upload files but they must NOT be executable as PHP.
+
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|htm|shtml|sh|cgi)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+Options -ExecCGI
+RemoveHandler .php .php3 .php4 .php5 .phtml .pl .py .jsp .asp .htm .shtml .sh .cgi
