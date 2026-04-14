@@ -173,3 +173,4 @@ iams/
 
 *IAMS — "We give the pathway to future leaders"*  
 *University of Botswana · Ministry of Labour and Home Affairs*
+"  ## ?? Database Setup 1. Copy \`config/database.example.php\` to \`config/database.php\` 2. Edit with your MySQL credentials 3. Import \`database_schema.sql\` to create tables " 
