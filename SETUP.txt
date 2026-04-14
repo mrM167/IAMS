@@ -1,0 +1,54 @@
+IAMS — Quick Setup Checklist
+============================
+
+STEP 1: Get your MySQL credentials from your hosting control panel
+------------------------------------------------------------------
+Log into InfinityFree (or your host) → control panel → MySQL Databases
+
+Write your details here:
+  Host:      _________________________________  (e.g. sql305.infinityfree.com)
+  DB Name:   _________________________________  (e.g. epiz_12345678_iams)
+  Username:  _________________________________  (e.g. epiz_12345678)
+  Password:  _________________________________
+
+
+STEP 2: Edit config/database.php
+---------------------------------
+Open config/database.php and change lines 5-8:
+
+  define('DB_HOST', 'PASTE YOUR HOST HERE');
+  define('DB_NAME', 'PASTE YOUR DB NAME HERE');
+  define('DB_USER', 'PASTE YOUR USERNAME HERE');
+  define('DB_PASS', 'PASTE YOUR PASSWORD HERE');
+
+
+STEP 3: Import the database
+-----------------------------
+1. In cPanel → phpMyAdmin → select your database on the left
+2. Click "Import" tab
+3. Choose file: database_schema.sql
+4. Click Go
+
+
+STEP 4: Upload files
+----------------------
+1. In cPanel → File Manager → navigate to htdocs/
+2. Upload all files from this ZIP (keeping folder structure)
+3. Make sure uploads/ folder exists inside htdocs/
+
+
+STEP 5: Test
+-------------
+1. Visit: yourdomain.com/test.php  ← diagnoses any issues
+2. Visit: yourdomain.com/          ← your live site
+3. Login with: admin@ub.ac.bw / password
+4. DELETE test.php after everything works!
+
+
+COMMON ERROR 500 CAUSES:
+--------------------------
+❌ config/database.php still has "your_db_name" placeholder values
+❌ Wrong DB host (InfinityFree is NOT localhost — check your cPanel)
+❌ Database not created or user not assigned to database
+❌ database_schema.sql not imported (tables don't exist)
+❌ uploads/ folder missing or not writable

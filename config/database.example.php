@@ -1,0 +1,1 @@
+"<?php // config/database.example.php // Copy this file to database.php and add your real credentials  define('DB_HOST', 'localhost'); define('DB_NAME', 'your_database_name'); define('DB_USER', 'your_username'); define('DB_PASS', 'your_password'); " 
