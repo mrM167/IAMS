@@ -1,0 +1,12 @@
+# Sensitive — never commit your real DB credentials
+config/database.php
+
+# Runtime uploads (not source code)
+uploads/*
+!uploads/.htaccess
+
+# OS junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
