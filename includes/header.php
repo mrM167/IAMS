@@ -106,17 +106,20 @@ $isAdmin = ($role === 'admin');
     </a>
     <div class="nav-links">
       <?php if ($role === 'student'): ?>
+        <a href="/index.php" class="hm">🏠 Home</a>
         <a href="/dashboard.php" class="hm">Dashboard</a>
         <a href="/dashboard.php?tab=apply" class="hm">Apply</a>
         <a href="/dashboard.php?tab=jobs" class="hm">Jobs</a>
         <a href="/logbook.php" class="hm">Logbook</a>
         <a href="/student_report.php" class="hm">Report</a>
       <?php elseif ($role === 'organisation'): ?>
+        <a href="/index.php" class="hm">🏠 Home</a>
         <a href="/org/dashboard.php">Dashboard</a>
         <a href="/org/dashboard.php?tab=students" class="hm">My Students</a>
         <a href="/org/dashboard.php?tab=jobs" class="hm">Job Posts</a>
         <a href="/supervisor_report.php" class="hm">Sup. Report</a>
       <?php elseif (in_array($role, ['admin','coordinator'])): ?>
+        <a href="/index.php" class="hm">🏠 Home</a>
         <a href="/admin/index.php" class="hm">Dashboard</a>
         <a href="/admin/students.php" class="hm">Students</a>
         <a href="/admin/organisations.php" class="hm">Orgs</a>
