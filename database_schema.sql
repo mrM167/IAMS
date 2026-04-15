@@ -5,6 +5,9 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+02:00";
 
+-- --------------------------------------------------------
+-- Table: users
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `users` (
   `user_id`        INT AUTO_INCREMENT PRIMARY KEY,
   `email`          VARCHAR(191) NOT NULL UNIQUE,
@@ -19,6 +22,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `created_at`     TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: login_attempts
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `login_attempts` (
   `id`           INT AUTO_INCREMENT PRIMARY KEY,
   `email`        VARCHAR(191) NOT NULL,
@@ -28,6 +34,23 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   INDEX `idx_ip`    (`ip_address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: password_resets
+-- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `password_resets` (
+  `reset_id`    INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id`     INT NOT NULL,
+  `token_hash`  VARCHAR(64) NOT NULL,
+  `expires_at`  DATETIME NOT NULL,
+  `used`        TINYINT(1) NOT NULL DEFAULT 0,
+  `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX `idx_token` (`token_hash`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table: student_profiles
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `student_profiles` (
   `profile_id`    INT AUTO_INCREMENT PRIMARY KEY,
   `user_id`       INT NOT NULL UNIQUE,
@@ -42,6 +65,9 @@ CREATE TABLE IF NOT EXISTS `student_profiles` (
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: organisations
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `organisations` (
   `org_id`          INT AUTO_INCREMENT PRIMARY KEY,
   `user_id`         INT NOT NULL UNIQUE,
@@ -60,6 +86,9 @@ CREATE TABLE IF NOT EXISTS `organisations` (
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: applications
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `applications` (
   `app_id`             INT AUTO_INCREMENT PRIMARY KEY,
   `user_id`            INT NOT NULL UNIQUE,
@@ -81,6 +110,9 @@ CREATE TABLE IF NOT EXISTS `applications` (
   FOREIGN KEY (`reviewed_by`)    REFERENCES `users`(`user_id`)        ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: documents
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `documents` (
   `doc_id`      INT AUTO_INCREMENT PRIMARY KEY,
   `user_id`     INT NOT NULL,
@@ -93,6 +125,9 @@ CREATE TABLE IF NOT EXISTS `documents` (
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: job_posts
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `job_posts` (
   `job_id`       INT AUTO_INCREMENT PRIMARY KEY,
   `title`        VARCHAR(200) NOT NULL,
@@ -111,6 +146,9 @@ CREATE TABLE IF NOT EXISTS `job_posts` (
   FOREIGN KEY (`posted_by`) REFERENCES `users`(`user_id`)        ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: job_interests
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `job_interests` (
   `interest_id`  INT AUTO_INCREMENT PRIMARY KEY,
   `user_id`      INT NOT NULL,
@@ -121,6 +159,9 @@ CREATE TABLE IF NOT EXISTS `job_interests` (
   FOREIGN KEY (`job_id`)  REFERENCES `job_posts`(`job_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: matches
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `matches` (
   `match_id`       INT AUTO_INCREMENT PRIMARY KEY,
   `app_id`         INT NOT NULL,
@@ -140,7 +181,9 @@ CREATE TABLE IF NOT EXISTS `matches` (
   FOREIGN KEY (`coordinator_id`) REFERENCES `users`(`user_id`)        ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Release 2.0 Tables
+-- --------------------------------------------------------
+-- Table: logbooks
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `logbooks` (
   `logbook_id`        INT AUTO_INCREMENT PRIMARY KEY,
   `user_id`           INT NOT NULL,
@@ -163,6 +206,9 @@ CREATE TABLE IF NOT EXISTS `logbooks` (
   FOREIGN KEY (`reviewed_by`) REFERENCES `users`(`user_id`)       ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: student_reports
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `student_reports` (
   `report_id`         INT AUTO_INCREMENT PRIMARY KEY,
   `user_id`           INT NOT NULL,
@@ -184,6 +230,9 @@ CREATE TABLE IF NOT EXISTS `student_reports` (
   FOREIGN KEY (`reviewed_by`) REFERENCES `users`(`user_id`)       ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: supervisor_reports
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `supervisor_reports` (
   `sup_report_id`      INT AUTO_INCREMENT PRIMARY KEY,
   `student_user_id`    INT NOT NULL,
@@ -204,6 +253,9 @@ CREATE TABLE IF NOT EXISTS `supervisor_reports` (
   FOREIGN KEY (`supervisor_user_id`) REFERENCES `users`(`user_id`)       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: site_visit_assessments
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `site_visit_assessments` (
   `assessment_id`    INT AUTO_INCREMENT PRIMARY KEY,
   `student_user_id`  INT NOT NULL,
@@ -223,6 +275,9 @@ CREATE TABLE IF NOT EXISTS `site_visit_assessments` (
   FOREIGN KEY (`assessor_id`)     REFERENCES `users`(`user_id`)       ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- --------------------------------------------------------
+-- Table: notifications
+-- --------------------------------------------------------
 CREATE TABLE IF NOT EXISTS `notifications` (
   `notif_id`   INT AUTO_INCREMENT PRIMARY KEY,
   `user_id`    INT NOT NULL,
@@ -241,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `notifications` (
 -- admin@ub.ac.bw / password set via setup.php
 -- coordinator@ub.ac.bw / password set via setup.php
 
--- Sample job posts
+-- Sample job posts (optional, can be removed if not needed)
 INSERT INTO `job_posts` (`title`,`organization`,`location`,`description`,`salary_range`,`duration`,`slots`) VALUES
 ('IT Support Intern','Ministry of Labour and Home Affairs','Gaborone','Assist IT dept with helpdesk support and system monitoring.','BWP 1,500/month','6 months',2),
 ('Data Entry Clerk','Ministry of Labour and Home Affairs','Gaborone','Input and verify data into the national employment registry.','BWP 1,200/month','3 months',3),

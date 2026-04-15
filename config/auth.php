@@ -26,16 +26,14 @@ class Auth {
         return $errors;
     }
 
-    // ── Brute-force protection ────────────────────────────────────────
-    public static function isLockedOut(string $email, string $ip): bool {
-        $db    = Database::getInstance();
-        $since = date('Y-m-d H:i:s', time() - self::LOCKOUT_MINS * 60);
-
+       public static function isLockedOut(string $email, string $ip): bool {
+        $db = Database::getInstance();
         $stmt = $db->prepare(
             "SELECT COUNT(*) FROM login_attempts
-             WHERE (email = ? OR ip_address = ?) AND attempted_at > ?"
+             WHERE (email = ? OR ip_address = ?)
+               AND attempted_at > NOW() - INTERVAL ? MINUTE"
         );
-        $stmt->execute([$email, $ip, $since]);
+        $stmt->execute([$email, $ip, self::LOCKOUT_MINS]);
         return (int)$stmt->fetchColumn() >= self::MAX_ATTEMPTS;
     }
 
@@ -51,17 +49,16 @@ class Auth {
            ->execute([$email, $ip]);
     }
 
-    public static function remainingAttempts(string $email, string $ip): int {
-        $db    = Database::getInstance();
-        $since = date('Y-m-d H:i:s', time() - self::LOCKOUT_MINS * 60);
-        $stmt  = $db->prepare(
+      public static function remainingAttempts(string $email, string $ip): int {
+        $db = Database::getInstance();
+        $stmt = $db->prepare(
             "SELECT COUNT(*) FROM login_attempts
-             WHERE (email = ? OR ip_address = ?) AND attempted_at > ?"
+             WHERE (email = ? OR ip_address = ?)
+               AND attempted_at > NOW() - INTERVAL ? MINUTE"
         );
-        $stmt->execute([$email, $ip, $since]);
+        $stmt->execute([$email, $ip, self::LOCKOUT_MINS]);
         return max(0, self::MAX_ATTEMPTS - (int)$stmt->fetchColumn());
     }
-
     // ── Login ─────────────────────────────────────────────────────────
     public static function login(string $email, string $password): array {
         $ip    = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
@@ -75,6 +72,8 @@ class Auth {
         $stmt = $db->prepare("SELECT * FROM users WHERE email = ? AND is_active = 1 LIMIT 1");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
+        
+       
 
         if (!$user || !self::verifyPassword($password, $user['password_hash'])) {
             self::recordFailedAttempt($email, $ip);
