@@ -99,12 +99,24 @@ footer ul li a:hover{color:var(--gold)}
       <div class="logo-text">IAMS <span>University of Botswana</span></div>
     </a>
     <nav>
-      <a href="#how-it-works" class="hide-mob">How It Works</a>
-      <a href="#jobs" class="hide-mob">Browse Jobs</a>
-      <a href="/register.php" class="hide-mob">Register</a>
-      <a href="/register_org.php" class="hide-mob">Organisations</a>
-      <a href="/login.php" class="btn-nav-gold">Login</a>
-    </nav>
+    <a href="#how-it-works" class="hide-mob">How It Works</a>
+    <a href="#jobs" class="hide-mob">Browse Jobs</a>
+    <?php if (!empty($_SESSION['user_id'])): ?>
+        <?php $role = $_SESSION['role'] ?? 'student'; ?>
+        <?php if ($role === 'student'): ?>
+            <a href="/dashboard.php" class="btn-nav-gold">📋 Dashboard</a>
+        <?php elseif ($role === 'organisation'): ?>
+            <a href="/org/dashboard.php" class="btn-nav-gold">🏢 Dashboard</a>
+        <?php elseif (in_array($role, ['admin','coordinator'])): ?>
+            <a href="/admin/index.php" class="btn-nav-gold">⚙️ Dashboard</a>
+        <?php endif; ?>
+        <a href="/logout.php" style="background:transparent; color:rgba(255,255,255,.8);">Logout</a>
+    <?php else: ?>
+        <a href="/register.php" class="hide-mob">Register</a>
+        <a href="/register_org.php" class="hide-mob">Organisations</a>
+        <a href="/login.php" class="btn-nav-gold">Login</a>
+    <?php endif; ?>
+</nav>
   </div>
 </header>
 
