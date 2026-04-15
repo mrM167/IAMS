@@ -13,17 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params(['lifetime'=>0,'path'=>'/','httponly'=>true,'samesite'=>'Lax']);
     session_start();
 }
-if (!empty($_SESSION['user_id'])) {
-    $role = $_SESSION['role'] ?? 'student';
-    if ($role === 'organisation') {
-        header('Location: /org/dashboard.php');
-    } elseif ($role === 'admin' || $role === 'coordinator') {
-        header('Location: /admin/index.php');
-    } else {
-        header('Location: /dashboard.php');
-    }
-    exit();
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
