@@ -1,0 +1,52 @@
+# IAMS — Apache Security Configuration
+
+# Prevent directory listing
+Options -Indexes
+
+# Deny direct access to config and includes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # Block access to config directory
+    RewriteRule ^config/ - [F,L]
+    # Block access to includes directory
+    RewriteRule ^includes/ - [F,L]
+    # Block access to .sql files
+    RewriteRule \.sql$ - [F,L]
+    # Block access to hidden files
+    RewriteRule ^\.  - [F,L]
+
+    # Remove trailing slashes
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)/$ /$1 [L,R=301]
+</IfModule>
+
+# PHP security settings (override if allowed by host)
+<IfModule mod_php.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value session.cookie_httponly 1
+    php_value session.use_only_cookies 1
+    php_value session.cookie_samesite Lax
+</IfModule>
+
+# Security headers
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Prevent access to sensitive file extensions
+<FilesMatch "\.(sql|log|env|ini|htpasswd|bak|backup|sh|py)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Block bad bots
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_USER_AGENT} (wget|curl|nikto|sqlmap|nmap|masscan) [NC]
+    RewriteRule .* - [F,L]
+</IfModule>
