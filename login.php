@@ -125,7 +125,11 @@ body{font-family:'DM Sans',sans-serif;background:linear-gradient(135deg,var(--na
     <div class="login-footer">
       <a href="/forgot_password.php">Forgot password?</a>
     </div>
-    <div class="login-footer" style="margin-top:.75rem">Don't have an account?</div>
+    <div class="login-footer" style="margin-top:.75rem">Don't have an account? 
+      <div style="text-align:center;margin-top:.75rem;padding-top:.75rem;border-top:1px solid #f0f0f0">
+  <a href="/admin/register.php" style="font-size:.75rem;color:#9ca3af;text-decoration:none">🔐 Admin Registration</a>
+</div>
+    </div>
     <div class="role-links">
       <a href="/register.php" class="role-link">&#127891; Student</a>
       <a href="/register_org.php" class="role-link">&#127970; Organisation</a>

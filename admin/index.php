@@ -45,9 +45,11 @@ $pageTitle = 'Admin Dashboard';
     <div class="page-sub">Welcome back, <?php echo htmlspecialchars($user['name']); ?> — <?php echo date('l, j F Y'); ?></div>
   </div>
   <div style="display:flex;gap:.75rem">
-    <a href="/admin/matching.php" class="btn btn-gold">🤖 Run Matching</a>
-    <a href="/admin/applications.php" class="btn btn-primary">Review Applications</a>
-  </div>
+<?php if ($user['role'] === 'admin'): ?>
+  <a href="/admin/register.php" class="btn btn-gold">➕ Add Admin</a>
+  <?php endif; ?>
+  <a href="/admin/matching.php" class="btn btn-gold">🤖 Run Matching</a>
+  <a href="/admin/applications.php" class="btn btn-primary">Review Applications</a>  </div>
 </div>
 
 <!-- Stats -->

@@ -132,6 +132,9 @@ $isAdmin = ($role === 'admin');
         <a href="/admin/reminders.php" class="hm">&#128276;</a>
         <?php if ($isAdmin): ?><a href="/admin/users.php" class="hm">&#128101; Users</a><?php endif; ?>
       <?php endif; ?>
+      <?php if (isset($isAdmin) && $isAdmin): ?>
+  <a href="/admin/register.php">➕ Add Admin</a>
+  <?php endif; ?>
       <a href="/notifications.php">&#128276;<?php if ($unread): ?><span class="notif-badge"><?php echo $unread; ?></span><?php endif; ?></a>
       <a href="/logout.php" class="btn-gold-nav btn">Logout</a>
     </div>

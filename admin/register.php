@@ -70,14 +70,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = 'Passwords do not match.';
     }
     
-    // Check duplicate email
     if (!$errors) {
-        $chk = $db->prepare("SELECT user_id FROM users WHERE email = ?");
-        $chk->execute([$data['email']]);
-        if ($chk->fetch()) {
-            $errors[] = 'Email already registered.';
-        }
+    $db = Database::getInstance();
+    
+    // Check email uniqueness
+    $emailChk = $db->prepare("SELECT user_id FROM users WHERE email=?");
+    $emailChk->execute([$data['email']]);
+    if ($emailChk->fetch()) {
+        $errors[] = 'This email is already registered. Please use a different email or login.';
     }
+    
+    // Check student number uniqueness
+    $studentChk = $db->prepare("SELECT user_id FROM users WHERE student_number=?");
+    $studentChk->execute([$data['student_number']]);
+    if ($studentChk->fetch()) {
+        $errors[] = 'Student number ' . htmlspecialchars($data['student_number']) . ' is already registered. Each student can only have one account.';
+    }
+    
+    if (!$errors) {
 
     // Create user
     if (!$errors) {
