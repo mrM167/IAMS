@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'confirm'   => $_POST['confirm_password'] ?? '',
     ];
 
-    // Validation
+    // ── Validation ──────────────────────────────
     if (!$data['full_name']) {
         $errors[] = 'Full name is required.';
     }
@@ -69,27 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($data['password'] !== $data['confirm']) {
         $errors[] = 'Passwords do not match.';
     }
-    
-    if (!$errors) {
-    $db = Database::getInstance();
-    
-    // Check email uniqueness
-    $emailChk = $db->prepare("SELECT user_id FROM users WHERE email=?");
-    $emailChk->execute([$data['email']]);
-    if ($emailChk->fetch()) {
-        $errors[] = 'This email is already registered. Please use a different email or login.';
-    }
-    
-    // Check student number uniqueness
-    $studentChk = $db->prepare("SELECT user_id FROM users WHERE student_number=?");
-    $studentChk->execute([$data['student_number']]);
-    if ($studentChk->fetch()) {
-        $errors[] = 'Student number ' . htmlspecialchars($data['student_number']) . ' is already registered. Each student can only have one account.';
-    }
-    
-    if (!$errors) {
 
-    // Create user
+    // ── Uniqueness Check ────────────────────────
+    if (!$errors) {
+        $emailChk = $db->prepare("SELECT user_id FROM users WHERE email = ?");
+        $emailChk->execute([$data['email']]);
+        if ($emailChk->fetch()) {
+            $errors[] = 'This email is already registered. Please use a different email.';
+        }
+    }
+
+    // ── Create User ─────────────────────────────
     if (!$errors) {
         try {
             $db->prepare("INSERT INTO users (email, password_hash, full_name, phone, role, is_active) VALUES (?, ?, ?, ?, ?, 1)")
